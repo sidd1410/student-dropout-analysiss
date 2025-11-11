@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dropout Analysis - LIVE</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+        .risk-calculator {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .result {
+            display: none;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        .risk-high { background: #ff6b6b; color: white; }
+        .risk-medium { background: #ffd93d; color: black; }
+        .risk-low { background: #51cf66; color: white; }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                🎓 Student Dropout Analysis System - LIVE DEMO
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero">
+        <div class="container">
+            <h1 class="display-4 fw-bold">Predict Student Dropout Risk</h1>
+            <p class="lead">AI-Powered Risk Assessment - Running directly on GitHub!</p>
+        </div>
+    </div>
+
+    <!-- Risk Calculator -->
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="risk-calculator shadow">
+                    <h3 class="text-center mb-4">🔍 Student Risk Assessment</h3>
+                    
+                    <form id="riskForm">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Student Name</label>
+                                <input type="text" id="studentName" class="form-control" value="Rahul Sharma" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Attendance Rate (%)</label>
+                                <input type="range" id="attendance" class="form-range" min="0" max="100" value="65" oninput="updateAttendanceValue(this.value)">
+                                <span id="attendanceValue">65%</span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Academic Performance (%)</label>
+                                <input type="range" id="academicScore" class="form-range" min="0" max="100" value="58" oninput="updateAcademicValue(this.value)">
+                                <span id="academicValue">58%</span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Family Income</label>
+                                <select id="familyIncome" class="form-select" required>
+                                    <option value="Low">Low</option>
+                                    <option value="Medium" selected>Medium</option>
+                                    <option value="High">High</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="text-center">
+                            <button type="button" class="btn btn-success btn-lg" onclick="calculateRisk()">
+                                🎯 Calculate Dropout Risk
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Results -->
+                    <div id="result" class="result">
+                        <h4 class="text-center" id="riskLevel"></h4>
+                        <div class="text-center mb-3">
+                            <h1 id="riskScore" class="display-1"></h1>
+                            <h4>Risk Score</h4>
+                        </div>
+                        
+                        <div class="student-details">
+                            <h5>Student Details:</h5>
+                            <p><strong>Name:</strong> <span id="resultName"></span></p>
+                            <p><strong>Attendance:</strong> <span id="resultAttendance"></span></p>
+                            <p><strong>Academic Score:</strong> <span id="resultAcademic"></span></p>
+                            <p><strong>Family Income:</strong> <span id="resultIncome"></span></p>
+                        </div>
+
+                        <div class="suggestion mt-3">
+                            <h5>🎯 Recommended Intervention:</h5>
+                            <p id="suggestionText"></p>
+                        </div>
+
+                        <div class="text-center mt-3">
+                            <button class="btn btn-primary" onclick="resetForm()">Analyze Another Student</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Project Info -->
+    <div class="container my-5">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h5>📊 Live Statistics</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>✅ <strong>Project Status:</strong> Running on GitHub Pages</p>
+                        <p>🚀 <strong>Demo Type:</strong> Interactive Web Application</p>
+                        <p>🎯 <strong>Features:</strong> Real-time Risk Calculation</p>
+                        <p>📱 <strong>Access:</strong> Works on all devices</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card shadow">
+                    <div class="card-header bg-success text-white">
+                        <h5>👥 Project Team</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Pallavi Dewangan</strong> (2230873)</p>
+                        <p><strong>Siddhant Dewangan</strong> (2230873)</p>
+                        <p><strong>Rishab Vaishnavi</strong> (2230841)</p>
+                        <p><strong>College:</strong> Chandigarh Engineering College</p>
+                        <p><strong>Guide:</strong> Ms. Anju Bala</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateAttendanceValue(value) {
+            document.getElementById('attendanceValue').textContent = value + '%';
+        }
+
+        function updateAcademicValue(value) {
+            document.getElementById('academicValue').textContent = value + '%';
+        }
+
+        function calculateRisk() {
+            // Get form values
+            const name = document.getElementById('studentName').value;
+            const attendance = parseInt(document.getElementById('attendance').value);
+            const academicScore = parseInt(document.getElementById('academicScore').value);
+            const familyIncome = document.getElementById('familyIncome').value;
+            
+            // Calculate risk score
+            let riskScore = 0;
+            
+            if (attendance < 75) riskScore += 30;
+            if (attendance < 60) riskScore += 20;
+            
+            if (academicScore < 50) riskScore += 40;
+            if (academicScore < 35) riskScore += 20;
+            
+            if (familyIncome === 'Low') riskScore += 30;
+            
+            // Cap at 100
+            riskScore = Math.min(riskScore, 100);
+            
+            // Determine risk level
+            let riskLevel, suggestion;
+            
+            if (riskScore >= 70) {
+                riskLevel = "🔴 HIGH RISK";
+                suggestion = "🚨 IMMEDIATE INTERVENTION NEEDED: Schedule emergency parent meeting, assign personal counselor, provide financial assistance, and implement daily monitoring.";
+            } else if (riskScore >= 40) {
+                riskLevel = "🟡 MEDIUM RISK";
+                suggestion = "⚠️ MONITORING REQUIRED: Weekly progress reviews, extra academic support classes, regular counseling sessions, and peer mentoring program.";
+            } else {
+                riskLevel = "🟢 LOW RISK";
+                suggestion = "✅ CURRENT STATUS GOOD: Continue regular monitoring, maintain positive reinforcement, encourage extracurricular activities, and conduct quarterly reviews.";
+            }
+            
+            // Display results
+            document.getElementById('riskLevel').textContent = riskLevel;
+            document.getElementById('riskScore').textContent = riskScore + '/100';
+            document.getElementById('resultName').textContent = name;
+            document.getElementById('resultAttendance').textContent = attendance + '%';
+            document.getElementById('resultAcademic').textContent = academicScore + '%';
+            document.getElementById('resultIncome').textContent = familyIncome;
+            document.getElementById('suggestionText').textContent = suggestion;
+            
+            // Style based on risk
+            const resultDiv = document.getElementById('result');
+            resultDiv.className = 'result ';
+            if (riskScore >= 70) {
+                resultDiv.classList.add('risk-high');
+            } else if (riskScore >= 40) {
+                resultDiv.classList.add('risk-medium');
+            } else {
+                resultDiv.classList.add('risk-low');
+            }
+            
+            // Show results
+            resultDiv.style.display = 'block';
+            
+            // Scroll to results
+            resultDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function resetForm() {
+            document.getElementById('riskForm').reset();
+            document.getElementById('attendanceValue').textContent = '65%';
+            document.getElementById('academicValue').textContent = '58%';
+            document.getElementById('result').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
