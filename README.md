@@ -1,6 +1,12 @@
-# Student Dropout Analysis System
+# Student Dropout Analysis System for school education
 
-College Project - Predict student dropout risks using AI
+## 🎯 Objectives
+
+- Predict student dropout risk early
+- Identify at-risk students using data analysis
+- Provide intervention suggestions to teachers  
+- Create easy-to-use web interface for schools
+- Help reduce student dropout rates
 
 ## Team:
 - Pallavi Dewangan
@@ -8,7 +14,7 @@ College Project - Predict student dropout risks using AI
 - Rishab Vaishnavi
 
 ## College:
-Chandigarh Engineering College
+Chandigarh Engineering College Mohali
 
 ## How to Run:
 1. pip install flask
